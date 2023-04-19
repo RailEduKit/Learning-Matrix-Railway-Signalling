@@ -1,0 +1,27 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\coordinate (A1) at ( 0, 0);
+\coordinate (B1) at (12, 0);
+
+\coordinate (S1) at (1,0);
+\coordinate (S2) at (4,0);
+\coordinate (S3) at (7,0);
+\coordinate (S4) at (10,0);
+
+\coordinate (CP1) at (5.5,0);
+\coordinate (CP2) at (11.5,0);
+
+
+\maintrack (A1) -- (B1);
+
+\pic at (S1) {distant_signal_forward};
+\pic at (S2) {block_signal_forward};
+\pic at (S3) {distant_signal_forward};
+\pic at (S4) {block_signal_forward};
+
+\clearingpoint[forward] at (CP1) label ();
+\clearingpoint[forward] at (CP2) label ();

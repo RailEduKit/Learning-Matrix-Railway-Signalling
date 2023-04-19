@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to register (e.g. '1.0.1' or '2023.03')"
+        description: "Version to register (e.g. '1.0.1')"
         required: true
 
 env:
   VERSION_SCHEMA: semantic # 'semantic' or 'calendar'
-  REPO_NAME: unnamed # provide repository name: https://github.com/railtoolkit/REPO_NAME
-  ZENODO_COLLECTION: # provide Zenodo collection number $COLLECTION from DOI: 10.5281/zenodo.COLLECTION
+  REPO_NAME: Learning-Matrix-Railway-Signalling # provide repository name: https://github.com/railedukit/REPO_NAME
+  ZENODO_COLLECTION: 7689889 # provide Zenodo collection number $COLLECTION from DOI: 10.5281/zenodo.COLLECTION
 
 jobs:
   version:
@@ -168,7 +168,7 @@ jobs:
           ## ---------------------------------
           TOP=$(grep -n "## \[Unreleased\]" CHANGELOG.md | cut -d: -f1)
           if [ "$CURRENT_VERSION" = "no_version" ]; then
-            BOTTOM=$(grep -n -m 1 "\[Unreleased\]: https://github.com/railtoolkit/" CHANGELOG.md | cut -d: -f1)
+            BOTTOM=$(grep -n -m 1 "\[Unreleased\]: https://github.com/railedukit/" CHANGELOG.md | cut -d: -f1)
           else
             BOTTOM=$(grep -n -m 1 "## Version \[$CURRENT_VERSION\]" CHANGELOG.md | cut -d: -f1)
           fi
@@ -356,7 +356,7 @@ jobs:
         run: |
           DATE=$(date "+%Y-%m-%d")
           VERSION=${{ needs.version.outputs.new }}
-          URL="https://github.com/railtoolkit/$REPO_NAME"
+          URL="https://github.com/railedukit/$REPO_NAME"
           CURRENT_VERSION=${{ needs.version.outputs.current }}
           if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
             sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION] $DATE" CHANGELOG.md
@@ -376,8 +376,8 @@ jobs:
         with:
           message: "updated to ${{ needs.version.outputs.new }} (via github action)"
           add: CITATION.cff CHANGELOG.md
-          author_name: railtoolkit
-          author_email: railtoolkit@ownx.net
+          author_name: railedukit
+          author_email: railedukit@ownx.net
           tag: 'v${{ needs.version.outputs.new }} --force'
       - run: echo "- updated repository with new CITATION.cff and CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 

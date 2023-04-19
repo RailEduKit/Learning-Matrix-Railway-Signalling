@@ -1,35 +1,27 @@
 # YAML 1.2
 ---
 cff-version: 1.2.0
-title: PROJEKT_TEMPLATE
-message: If you use this software, please cite both the proceedings from preferred-citation and the software itself.
-type: dataset
+title: Learning-Matrix-Railway-Signalling
+message: If you use this open educational ressource , please cite both the proceedings from preferred-citation and the software itself.
 authors:
-  - given-names: John
-    family-names: Doe
-    email: jd@university.ac
-    orcid: https://orcid.org/0000-0000-0000-0000
-    affiliation: University
+  - given-names: Martin
+    family-names: Scheidt
+    email: m.scheidt@tu-bs.de
+    orcid: 'https://orcid.org/0000-0002-9384-8945'
+    affiliation: TU Braunschweig
+  - given-names: Julia
+    family-names: Edeleva
+    email: y.edeleva@tu-braunschweig.de
+    orcid: 'https://orcid.org/0000-0003-0053-0151'
+    affiliation: TU Braunschweig
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.ZENODO_COLLECTION
+    value: 10.5281/zenodo.7689889
     description: 'Collection of archived snapshots of all versions'
   - type: doi
     value: 10.5281/zenodo.DOI
     description: Current version
-repository: https://github.com/railtoolkit/PROJEKT
-url: https://www.railtoolkit.org/projects/PROJEKT
-license: ISC
+repository: https://github.com/railedukit/Learning-Matrix-Railway-Signalling
+license: CC-BY-4.0
 version: 0.1.0
 date-released: 2023-03-02
-preferred-citation:
-  authors:
-    - given-names: John
-      family-names: Doe
-      orcid: https://orcid.org/0000-0000-0000-0000
-  doi: 10.24355/dbbs.084-202204140847-0
-  title: Howto use OpenSource in OpenScience
-  type: proceedings
-  year: 2000
-  publisher:
-    name: Conference

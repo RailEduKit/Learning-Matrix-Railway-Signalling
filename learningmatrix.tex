@@ -1,0 +1,69 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\documentclass[
+  headinclude=false,
+  footinclude=false,
+  paper=A3,
+  paper=landscape,
+  pagesize,
+  DIV  = 14
+]{scrartcl}
+
+\usepackage{learningmatrix}
+
+\begin{document}
+%%%
+%
+\selectlanguage{ngerman}% ngerman or english
+%
+%%%
+\centering
+\raggedright Folgefahrschutz und Gegenfahrschutz
+\begin{tabular}{|p{0.31\textwidth}|p{0.31\textwidth}|p{0.31\textwidth}|}
+  \hline
+  \question{follow}{A1} & \question{follow}{A2} &  \question{follow}{A3} \\[0.31\textheight]
+  \hline
+  \question{follow}{B1} & \question{follow}{B2} &  \question{follow}{B3} \\[0.31\textheight]
+  \hline
+  \question{follow}{C1} & \question{follow}{C2} &  \question{follow}{C3} \\[0.31\textheight]
+  \hline
+\end{tabular}
+
+\raggedright Fahrstraßen
+\begin{tabular}{|p{0.31\textwidth}|p{0.31\textwidth}|p{0.31\textwidth}|}
+  \hline
+  \question{route}{A1} & \question{route}{A2} &  \question{route}{A3} \\[0.31\textheight]
+  \hline
+  \question{route}{B1} & \question{route}{B2} &  \question{route}{B3} \\[0.31\textheight]
+  \hline
+  \question{route}{C1} & \question{route}{C2} &  \question{route}{C3} \\[0.31\textheight]
+  \hline
+\end{tabular}
+
+\raggedright Flankenschutz
+\begin{tabular}{|p{0.31\textwidth}|p{0.31\textwidth}|p{0.31\textwidth}|}
+  \hline
+  \question{flank}{A1} & \question{flank}{A2} &  \question{flank}{A3} \\[0.31\textheight]
+  \hline
+  \question{flank}{B1} & \question{flank}{B2} &  \question{flank}{B3} \\[0.31\textheight]
+  \hline
+  \question{flank}{C1} & \question{flank}{C2} &  \question{flank}{C3} \\[0.31\textheight]
+  \hline
+\end{tabular}
+
+\raggedright Durchrutschweg
+\begin{tabular}{|p{0.31\textwidth}|p{0.31\textwidth}|p{0.31\textwidth}|}
+  \hline
+  \question{overlap}{A1} & \question{overlap}{A2} &  \question{overlap}{A3} \\[0.31\textheight]
+  \hline
+  \question{overlap}{B1} & \question{overlap}{B2} &  \question{overlap}{B3} \\[0.31\textheight]
+  \hline
+  \question{overlap}{C1} & \question{overlap}{C2} &  \question{overlap}{C3} \\[0.31\textheight]
+  \hline
+\end{tabular}
+
+\end{document}

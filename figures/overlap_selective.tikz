@@ -1,0 +1,53 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\path (0,2.75) rectangle (0,-0.25);
+
+\coordinate (A1) at (0, 0);
+\coordinate (B1) at (12, 0);
+\coordinate (B2) at (12, 1);
+\coordinate (B3) at (12, 2);
+
+\coordinate (Y1) at (5,0);
+\coordinate (Y2) at (6.5,0);
+\coordinate (Y3) at (7,0);
+\coordinate (Y4) at (8,1);
+\coordinate (Y5) at (6.5,1);
+
+\coordinate (S1) at (1.5,0);
+\coordinate (S2) at (3.5,-3);
+\coordinate (S3) at (9.5,1);
+\coordinate (S4) at (9.5,0);
+\coordinate (S5) at (9.5,2);
+
+\coordinate (P1) at (11,0);
+\coordinate (P2) at (11,1);
+\coordinate (P3) at (11,2);
+
+\maintrack (A1) -- (B1);
+\maintrack (Y2) -- ++(-3.5,-3.5);
+\maintrack (Y1) -- ++( 1, 1) -- (B2);
+\maintrack (Y5) -- ++( 1, 1) -- (B3);
+\maintrack (Y3) -- (Y4);
+
+\tracklabel at (P1) label (1);
+\tracklabel at (P2) label (2);
+\tracklabel at (P3) label (3);
+
+\turnout[forward,branch=left] at (Y1) label ();
+\turnout[backward,branch=right] at (Y2) label ();
+\turnout[forward,branch=left] at (Y3) label ();
+\turnout[backward,branch=right] at (Y4) label ();
+\turnout[forward,branch=left] at (Y5) label ();
+
+\pic at (S1) {route_signal_forward};
+\pic[rotate=45] at (S2) {route_signal_forward};
+\pic at (S3) {route_signal_backward};
+\pic at (S4) {route_signal_backward};
+\pic at (S5) {route_signal_backward};
+
+\platform[length=2cm,side=left] at (P1);
+\platform[length=2cm,side=right] at (P2);

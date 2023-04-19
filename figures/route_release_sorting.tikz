@@ -1,0 +1,39 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\coordinate (A) at (0, 0);
+\coordinate (B) at (12, 0);
+
+\coordinate (Y1) at (4,0);
+\coordinate (Y2) at (6,0);
+
+\coordinate (S1) at (1,0);
+\coordinate (S2) at (9,0);
+
+\coordinate (CP1) at (3,0);
+\coordinate (CP2) at (5,0);
+\coordinate (CP3) at (7,0);
+
+\maintrack (A) -- (B);
+\maintrack (Y1) -- ++( 1, 1);
+\maintrack (Y2) -- ++( 1,-1);
+
+\turnout[forward,branch=left] at (Y1) label (W1);
+\turnout[forward,branch=right] at (Y2) label (W2);
+
+\node[left,align=right] at (A) {a};
+\node[right,align=left] at (B) {b};
+
+\pic at (S1) {distant_signal_forward};
+\pic at (S1) {route_signal_forward};
+\pic at (S2) {distant_signal_forward};
+\pic at (S2) {route_signal_forward};
+
+\clearingpoint[forward] at (S1) label (1);
+\clearingpoint[forward] at (CP1) label (2);
+\clearingpoint[forward] at (CP2) label (3);
+\clearingpoint[forward] at (CP3) label (4);
+\clearingpoint[forward] at (S2) label (5);

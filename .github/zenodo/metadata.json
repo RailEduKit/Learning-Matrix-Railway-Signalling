@@ -1,11 +1,16 @@
 {
-  "title": "PROJEKT_TEMPLATE",
+  "title": "Learning-Matrix-Railway-Signalling",
   "version": "%%[SCRIPT]",
   "creators": [
     {
-      "orcid": "0000-0000-0000-0000",
-      "affiliation": "University", 
-      "name": "Doe, John"
+      "orcid": "0000-0002-9384-8945",
+      "affiliation": "TU Braunschweig", 
+      "name": "Scheidt, Martin"
+    },
+    {
+      "orcid": "0000-0003-0053-0151",
+      "affiliation": "TU Braunschweig", 
+      "name": "Edeleva, Julia"
     }
   ],
   "description": "Some data or a package",
@@ -14,11 +19,11 @@
     "railroad"
   ],
   "license": {
-    "id": "ISC"
+    "id": "CC-BY-4.0"
   },
   "language": "eng",
   "access_right": "open", 
-  "upload_type": "software",
+  "upload_type": "lesson",
   "communities": [
     {
       "identifier": "railtoolkit"

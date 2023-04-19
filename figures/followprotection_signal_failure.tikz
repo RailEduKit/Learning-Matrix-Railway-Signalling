@@ -1,0 +1,35 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\path (0,0.75) rectangle (0,-0.75);
+
+\coordinate (A1) at ( 0, 0);
+\coordinate (B1) at (12, 0);
+
+\coordinate (S1) at (2,0);
+\coordinate (S2) at (5,0);
+\coordinate (S3) at (8,0);
+\coordinate (S4) at (11,0);
+
+\coordinate (T1) at (10.8,0);
+\coordinate (T2) at (1.8,0);
+
+\maintrack (A1) -- (B1);
+
+\train[forward,length=1cm] at (T1) label (1);
+\train[forward,length=1cm] at (T2) label (2);
+
+\pic at (S1) {distant_signal_forward};
+\pic at (S1) {block_signal_forward};
+\pic at (S2) {distant_signal_forward};
+\pic at (S2) {block_signal_forward};
+\pic at (S3) {distant_signal_forward};
+\pic at (S3) {block_signal_forward};
+\pic at (S4) {distant_signal_forward};
+\pic at (S4) {block_signal_forward};
+
+\tracklabel at (4,0) label (Störung);
+\trackmarking[red] (S1) -- (S2);

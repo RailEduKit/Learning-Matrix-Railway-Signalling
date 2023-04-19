@@ -1,0 +1,58 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\path (0,2.75) rectangle (0,-0.25);
+
+\coordinate (A1) at (0, 0);
+\coordinate (B1) at (12, 0);
+\coordinate (B2) at (12, 1);
+
+\coordinate (Y1) at (5,0);
+\coordinate (Y2) at (6.5,0);
+\coordinate (Y3) at (7,0);
+\coordinate (Y4) at (8,1);
+
+\coordinate (S01) at (1,0);
+\coordinate (S02) at (2,0);
+\coordinate (S03) at (3.5,0);
+\coordinate (S04) at (5.5,-1);
+\coordinate (S05) at (3.5,-3);
+\coordinate (S06) at (3.5,-3);
+\coordinate (S07) at (9.5,1);
+\coordinate (S08) at (9.5,0);
+\coordinate (S09) at (12,1);
+\coordinate (S10) at (10.5,0);
+
+\maintrack (A1) -- (B1);
+\maintrack (Y2) -- ++(-3.5,-3.5);
+\maintrack (Y1) -- ++( 1, 1) -- (B2);
+\maintrack (Y3) -- (Y4);
+
+\turnout[forward,branch=left] at (Y1) label ();
+\turnout[backward,branch=right] at (Y2) label ();
+\turnout[forward,branch=left] at (Y3) label ();
+\turnout[backward,branch=right] at (Y4) label ();
+
+\pic at (S01) {distant_signal_forward};
+\pic at (S01) {block_signal_forward};
+\pic at (S02) {distant_signal_backward};
+\pic at (S02) {block_signal_backward};
+\pic at (S03) {distant_signal_forward};
+\pic at (S03) {block_signal_forward};
+\pic[rotate=45] at (S04) {distant_signal_forward};
+\pic[rotate=45] at (S04) {block_signal_forward};
+\pic[rotate=45] at (S05) {distant_signal_backward};
+\pic[rotate=45] at (S05) {block_signal_backward};
+\pic[rotate=45] at (S06) {distant_signal_forward};
+\pic[rotate=45] at (S06) {block_signal_forward};
+\pic at (S07) {distant_signal_backward};
+\pic at (S07) {block_signal_backward};
+\pic at (S08) {distant_signal_backward};
+\pic at (S08) {block_signal_backward};
+\pic at (S09) {distant_signal_backward};
+\pic at (S09) {block_signal_backward};
+\pic at (S10) {distant_signal_forward};
+\pic at (S10) {block_signal_forward};

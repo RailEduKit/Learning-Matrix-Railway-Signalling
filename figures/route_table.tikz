@@ -1,0 +1,51 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = ../learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\coordinate (A1) at (0, 1);
+\coordinate (A2) at (0, 0);
+\coordinate (B1) at (12, 1);
+\coordinate (B2) at (12, 0);
+\coordinate (B3) at (12,-1);
+
+\coordinate (Y1) at (5,1);
+\coordinate (Y2) at (8,-1);
+\coordinate (Y3) at (6,0);
+\coordinate (Y4) at (7,0);
+
+\coordinate (S1) at (2,1);
+\coordinate (S2) at (2,0);
+\coordinate (S3) at (8,1);
+\coordinate (S4) at (10,0);
+\coordinate (S5) at (10,-1);
+
+\maintrack (A1) -- (B1);
+\maintrack (A2) -- (B2);
+\maintrack (Y1) -- (Y3);
+\maintrack (Y4) -- ++( 1,-1) -- (B3);
+\maintrack (Y2) -- ++(-2,0) coordinate (BS);
+\bufferstop[backward] at (BS);
+
+\turnout[forward,branch=right] at (Y1) label (W1);
+\turnout[backward,branch=left] at (Y2) label (W2);
+\turnout[backward,branch=left] at (Y3) label (W3);
+\turnout[forward,branch=right] at (Y4) label (W4);
+
+\node[left,align=right] at (A1) {1};
+\node[left,align=right] at (A2) {2};
+\node[right,align=left] at (B1) {3};
+\node[right,align=left] at (B2) {4};
+\node[right,align=left] at (B3) {5};
+
+\pic at (S1) {route_signal_forward};
+\node[below left=0.1cm] at (S1) {A};
+\pic at (S2) {route_signal_forward};
+\node[below left=0.1cm] at (S2) {B};
+\pic at (S3) {route_signal_backward};
+\node[above right=0.1cm] at (S3) {C};
+\pic at (S4) {route_signal_backward};
+\node[above right=0.1cm] at (S4) {D};
+\pic at (S5) {route_signal_backward};
+\node[above right=0.1cm] at (S5) {E};

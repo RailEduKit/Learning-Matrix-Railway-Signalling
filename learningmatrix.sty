@@ -1,0 +1,34 @@
+%!TEX TS-program = pdflatexmk
+%!TEX root = learningmatrix.tex
+
+% Copyright 2023 Martin Scheidt (Attribution 4.0 International, CC-BY-4.0)
+% You are free to copy and redistribute the material in any medium or format. You are free to remix, transform, and build upon the material for any purpose, even commercially. You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. No warranties are given.
+
+\RequirePackage[main=ngerman,english]{babel}
+
+\RequirePackage{tikz-trackschematic}
+\input{figures/layoutSymbols_DE.tikz}
+
+\def\figuresRoot{figures}
+\DeclareRobustCommand{\tikzfigure}[2][\linewidth]{%
+  \begin{adjustbox}{width=#1}%
+    \begin{tikzpicture}[font=\sffamily]%
+      \input{\figuresRoot/#2}%
+    \end{tikzpicture}%
+  \end{adjustbox}%
+}%
+\providecommand{\RN}[1]{%
+  \textup{\uppercase\expandafter{\romannumeral#1}}%
+}
+\def\questionsRoot{questions}
+\DeclareRobustCommand{\question}[2]{%
+  {\tiny \color{base1!50} #2}
+  \vfil
+  \input{\questionsRoot/#1_#2.tex}%
+}%
+
+\RequirePackage{enumitem}
+\RequirePackage[margin=1cm]{geometry}
+\RequirePackage{pdflscape}
+\RequirePackage[prefix=]{xcolor-solarized}
+\RequirePackage{csquotes}
