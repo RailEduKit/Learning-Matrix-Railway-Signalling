@@ -27,11 +27,11 @@ jobs:
         run: |
           TITLE_CITATION=$(grep '^title:' CITATION.cff | cut -d' ' -f2)
           TITLE_ZENODO=$(grep -m 1 '"title":' .github/zenodo/metadata.json | cut -d'"' -f4)
-          if [[ $TITLE_CITATION -eq "PROJEKT_TEMPLATE" ]]; then
+          if [[ $TITLE_CITATION = "PROJEKT_TEMPLATE" ]]; then
             echo "- :no_entry_sign: The file 'CITATION.cff' has no appropriate!" >> $GITHUB_STEP_SUMMARY
             echo "- :warning: Please modify CITATION.cff to reflect the metadata of the project." >> $GITHUB_STEP_SUMMARY
             exit 1
-          elif [[ $TITLE_ZENODO -eq "PROJEKT_TEMPLATE" ]]; then
+          elif [[ $TITLE_ZENODO = "PROJEKT_TEMPLATE" ]]; then
             echo "- :no_entry_sign: The file '.github/zenodo/metadata.json' has no appropriate!" >> $GITHUB_STEP_SUMMARY
             echo "- :warning: Please modify metadata.json to reflect the metadata of the project." >> $GITHUB_STEP_SUMMARY
             exit 1
@@ -46,16 +46,16 @@ jobs:
           ## check if version follows the semantic version pattern
           ## ---------------------------------
           #remove a trailing 'v' if it exists
-          if [[ ${VERSION:0:1} -eq "v" ]]; then
+          if [[ ${VERSION:0:1} = "v" ]]; then
             VERSION=${VERSION:1}
           fi
           # check with regular expressions
           STATUS=0
           VER_REGEX="a^"
-          if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+          if [[ $VERSION_SCHEMA = "semantic" ]]; then
             VER_REGEX="^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$"
           fi
-          if [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+          if [[ $VERSION_SCHEMA = "calendar" ]]; then
             VER_REGEX="^([0-9]{4}).(1[0-2]|0[1-9])$"
           fi
           if [[ ! $VERSION =~ $VER_REGEX ]]; then
@@ -63,16 +63,16 @@ jobs:
           fi
           if [ $STATUS = 1 ]; then
             echo "- :no_entry_sign: format does not follow a versioning schema" >> $GITHUB_STEP_SUMMARY
-            if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+            if [[ $VERSION_SCHEMA = "semantic" ]]; then
               echo ":warning: Please see https://semver.org/ for further information." >> $GITHUB_STEP_SUMMARY
-            elif [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+            elif [[ $VERSION_SCHEMA = "calendar" ]]; then
               echo ":warning: Please see https://calver.org/ for further information." >> $GITHUB_STEP_SUMMARY
             fi
             exit 1
           else
-            if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+            if [[ $VERSION_SCHEMA = "semantic" ]]; then
               echo "- follows the semantic versioning schema format :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-            elif [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+            elif [[ $VERSION_SCHEMA = "calendar" ]]; then
               echo "- follows the calendar versioning schema format :white_check_mark:" >> $GITHUB_STEP_SUMMARY
             fi
           fi
@@ -88,7 +88,7 @@ jobs:
             VERSION_MINOR=$(echo $VERSION | cut -d. -f2 )
             CURRENT_VERSION_MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1 )
             CURRENT_VERSION_MINOR=$(echo $CURRENT_VERSION | cut -d. -f2 )
-            if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+            if [[ $VERSION_SCHEMA = "semantic" ]]; then
               VERSION_PATCH=$(echo $VERSION | cut -d. -f3 )
               CURRENT_VERSION_PATCH=$(echo $CURRENT_VERSION | cut -d. -f3 )
               if [[ $VERSION_MAJOR -eq CURRENT_VERSION_MAJOR ]]; then
@@ -117,7 +117,7 @@ jobs:
                   STATUS=1
                 fi
               fi
-            elif [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+            elif [[ $VERSION_SCHEMA = "calendar" ]]; then
               if [[ $VERSION_MAJOR -eq CURRENT_VERSION_MAJOR ]]; then
                 if [[ ! $VERSION_MINOR -gt CURRENT_VERSION_MINOR ]]; then
                   STATUS=1
@@ -127,10 +127,10 @@ jobs:
               fi
             fi
             if [ $STATUS = 1 ]; then
-              if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+              if [[ $VERSION_SCHEMA = "semantic" ]]; then
                 echo "- :no_entry_sign: Version skipped steps from the previous version $CURRENT_VERSION and thus does not follow the semantic versioning schema." >> $GITHUB_STEP_SUMMARY
                 echo "- :warning: Please see https://semver.org/ for further information." >> $GITHUB_STEP_SUMMARY
-              elif [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+              elif [[ $VERSION_SCHEMA = "calendar" ]]; then
                 echo "- :no_entry_sign: Version is not higher then the previous version $CURRENT_VERSION and thus does not follow the calendar versioning schema." >> $GITHUB_STEP_SUMMARY
                 echo "- :warning: Please see https://calver.org/ for further information." >> $GITHUB_STEP_SUMMARY
               fi
@@ -358,9 +358,9 @@ jobs:
           VERSION=${{ needs.version.outputs.new }}
           URL="https://github.com/railedukit/$REPO_NAME"
           CURRENT_VERSION=${{ needs.version.outputs.current }}
-          if [[ $VERSION_SCHEMA -eq "semantic" ]]; then
+          if [[ $VERSION_SCHEMA = "semantic" ]]; then
             sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION] $DATE" CHANGELOG.md
-          elif [[ $VERSION_SCHEMA -eq "calendar" ]]; then
+          elif [[ $VERSION_SCHEMA = "calendar" ]]; then
             sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION]" CHANGELOG.md
           fi
           if [ "$CURRENT_VERSION" = "no_version" ]; then
@@ -383,7 +383,7 @@ jobs:
 
   publish_mastodon:
     needs: [zenodo, version]
-    name: "Toot about it on fosstodon.org"
+    name: "Toot about it on fediscience.org"
     runs-on: ubuntu-latest
     steps:
       - uses: cbrgm/mastodon-github-action@v1

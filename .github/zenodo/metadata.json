@@ -13,10 +13,11 @@
       "name": "Edeleva, Julia"
     }
   ],
-  "description": "Some data or a package",
+  "description": "A learning matrix with cognitive and thematic domains in railway signalling.",
   "keywords": [
     "railway",
-    "railroad"
+    "railroad",
+    "interlocking"
   ],
   "license": {
     "id": "CC-BY-4.0"

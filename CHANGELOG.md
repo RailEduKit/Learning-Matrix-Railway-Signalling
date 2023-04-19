@@ -10,5 +10,12 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
 ### Added
 
+initial learning matrix with four areas:
+
+* follow protection and opposing protection
+* routes
+* flank protection
+* overlaps
+
 
 [Unreleased]: https://github.com/railedukit/PROJEKT/tree/main
