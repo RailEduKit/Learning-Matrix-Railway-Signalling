@@ -391,5 +391,5 @@ jobs:
           message: "The new version ${{ needs.version.outputs.new }} of $REPO_NAME is available! DOI: https://doi.org/${{ needs.zenodo.outputs.doi }}."
           visibility: "public" # default: public
         env:
-          MASTODON_URL: "https://fosstodon.org/"
+          MASTODON_URL: "https://fediscience.org/"
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }} # access token
