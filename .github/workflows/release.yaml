@@ -21,6 +21,7 @@ jobs:
     outputs:
       current: ${{ steps.version_check.outputs.current }}
       new: ${{ steps.version_check.outputs.new }}
+      files: ${{ steps.file_check.outputs.files }}
     steps:
       - name: "checkout"
         uses: actions/checkout@v3
@@ -148,6 +149,23 @@ jobs:
           echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "new=$VERSION" >> $GITHUB_OUTPUT
 
+      # 3. create release archive
+      ## exclude certain files from release archive
+      - name: "check files"
+        id: file_check
+        run: |
+          LS=$(ls)
+          FILES=()
+          for ITEM in $LS; do
+            if [[ ! $ITEM = "CHANGELOG.md" ]] &&
+               [[ ! $ITEM = "CITATION.cff" ]] &&
+               [[ ! $ITEM = "CODE_OF_CONDUCT.md" ]] &&
+               [[ ! $ITEM = "CONTRIBUTING.md" ]]; then
+              FILES=${FILES:+$FILES }$ITEM
+            fi
+          done
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+
   create_package:
     name: "create package"
     needs: [version]
@@ -170,7 +188,7 @@ jobs:
           ## ---------------------------------
           TOP=$(grep -n "## \[Unreleased\]" CHANGELOG.md | cut -d: -f1)
           if [ "$CURRENT_VERSION" = "no_version" ]; then
-            BOTTOM=$(grep -n -m 1 "\[Unreleased\]: https://github.com/${{ env.ACCOUNT_NAME }}/" CHANGELOG.md | cut -d: -f1)
+            BOTTOM=$(grep -n -m 1 "\[Unreleased\]: https://github.com/" CHANGELOG.md | cut -d: -f1)
           else
             BOTTOM=$(grep -n -m 1 "## Version \[$CURRENT_VERSION\]" CHANGELOG.md | cut -d: -f1)
           fi
@@ -195,23 +213,10 @@ jobs:
           ## ---------------------------------
           sed -i -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' release-note-v$NEW_VERSION.md
 
-      # 3. create release archive
-      ## exclude certain files from release archive
-      - run: |
-          LS=$(ls)
-          FILES=()
-          for ITEM in $LS; do
-            if [[ ! $ITEM = "CHANGELOG.md" ]] &&
-               [[ ! $ITEM = "CITATION.cff" ]] &&
-               [[ ! $ITEM = "CODE_OF_CONDUCT.md" ]] &&
-               [[ ! $ITEM = "CONTRIBUTING.md" ]]; then
-              FILES=${FILES:+$FILES }$ITEM
-            fi
-          done
       - name: "create release archive"
         uses: papeloto/action-zip@v1.1
         with:
-          files: $FILES
+          files: ${{ needs.version.outputs.files }}
           recursive: false
           dest: ${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
       - run: echo "- creating ZIP-Archive for the new release :white_check_mark:" >> $GITHUB_STEP_SUMMARY
