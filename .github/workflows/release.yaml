@@ -11,7 +11,7 @@ env:
   VERSION_SCHEMA: semantic # 'semantic' or 'calendar'
   ACCOUNT_NAME: RailEduKit #  provide account name: https://github.com/ACCOUNT_NAME/repossitory
   REPO_NAME: Learning-Matrix-Railway-Signalling # provide repository name: https://github.com/railedukit/REPO_NAME
-  ZENODO_COLLECTION: 7689889 # provide Zenodo collection number $COLLECTION from DOI: 10.5281/zenodo.COLLECTION
+  ZENODO_COLLECTION: 7689888 # provide Zenodo collection number $COLLECTION from DOI: 10.5281/zenodo.COLLECTION
   MASTODON_INSTANCE: fediscience.org # i.e. https://MASTODON_INSTANCE/ without the protocol part
 
 jobs:
@@ -229,46 +229,6 @@ jobs:
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
       - run: echo "- providing ZIP-Archive and release notes for other jobs :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  publish_github:
-    needs: [create_package, version]
-    name: "publish on github"
-    runs-on: ubuntu-latest
-    steps:
-      # 1. download artifact in folder artifact/
-      - uses: actions/download-artifact@v3
-
-      # 2. creating a new release
-      - name: "create release"
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: v${{ needs.version.outputs.new }}
-          release_name: Release v${{ needs.version.outputs.new }}
-          body_path: artifact/release-note-v${{ needs.version.outputs.new }}.md
-          draft: false
-          prerelease: false
-
-      # 3. upload package to new release
-      - name: "upload release asset"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
-          asset_name: ${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
-          asset_content_type: application/zip
-
-      # 4. publish release on github
-      - name: "publish release"
-        uses: StuYarrow/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          id: ${{ steps.create_release.outputs.id }}
-
   zenodo:
     needs: [create_package, version]
     name: "publish on zenodo"
@@ -281,7 +241,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
       - run: |
-          mv artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip ../
+          mv artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip ../${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
           echo "- getting ZIP-Archive and release notes :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
       # 2. install zenodraft
@@ -318,7 +278,7 @@ jobs:
           ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
         run: |
           DOI=$(zenodraft deposition create version ${{ env.ZENODO_COLLECTION }})
-          zenodraft file add $DOI ${{ env.REPO_NAME }}-v*.zip
+          zenodraft file add $DOI ${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
           zenodraft metadata update $DOI .github/zenodo/metadata.json
           zenodraft deposition publish $DOI
           ## =================================
@@ -387,9 +347,49 @@ jobs:
           tag: 'v${{ needs.version.outputs.new }} --force'
       - run: echo "- updated repository with new CITATION.cff and CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
+  publish_github:
+    needs: [create_package, version,update_repository]
+    name: "publish on github"
+    runs-on: ubuntu-latest
+    steps:
+      # 1. download artifact in folder artifact/
+      - uses: actions/download-artifact@v3
+
+      # 2. creating a new release
+      - name: "create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{ needs.version.outputs.new }}
+          release_name: Release v${{ needs.version.outputs.new }}
+          body_path: artifact/release-note-v${{ needs.version.outputs.new }}.md
+          draft: false
+          prerelease: false
+
+      # 3. upload package to new release
+      - name: "upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
+          asset_name: ${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip
+          asset_content_type: application/zip
+
+      # 4. publish release on github
+      - name: "publish release"
+        uses: StuYarrow/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ steps.create_release.outputs.id }}
+
   publish_mastodon:
     needs: [zenodo, version]
-    name: "Toot about it on $MASTODON_INSTANCE"
+    name: "Toot about it"
     runs-on: ubuntu-latest
     steps:
       - uses: cbrgm/mastodon-github-action@v1

@@ -16,12 +16,12 @@ authors:
     affiliation: TU Braunschweig
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.7689889
+    value: 10.5281/zenodo.7689888
     description: 'Collection of archived snapshots of all versions'
   - type: doi
-    value: 10.5281/zenodo.DOI
+    value: 10.5281/zenodo.7689889
     description: Current version
 repository: https://github.com/RailEduKit/Learning-Matrix-Railway-Signalling
 license: CC-BY-4.0
 version: 0.1.0
-date-released: 2023-03-02
+date-released: 2023-03-01
