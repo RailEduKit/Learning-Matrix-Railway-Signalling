@@ -18,4 +18,4 @@ initial learning matrix with four areas:
 * overlaps
 
 
-[Unreleased]: https://github.com/railedukit/PROJEKT/tree/main
+[Unreleased]: https://github.com/RailEduKit/Learning-Matrix-Railway-Signalling/tree/main
