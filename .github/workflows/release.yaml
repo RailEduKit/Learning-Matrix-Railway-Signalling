@@ -149,7 +149,6 @@ jobs:
           echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "new=$VERSION" >> $GITHUB_OUTPUT
 
-      # 3. create release archive
       ## exclude certain files from release archive
       - name: "check files"
         id: file_check
@@ -270,133 +269,133 @@ jobs:
         with:
           id: ${{ steps.create_release.outputs.id }}
 
-  # zenodo:
-  #   needs: [create_package, version]
-  #   name: "publish on zenodo"
-  #   outputs:
-  #     doi: ${{ steps.zenodraft.outputs.doi }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: echo "Archiving package on zenodo to get a DOI:" >> $GITHUB_STEP_SUMMARY
-  #     # 1. download artifact in folder artifact/ and move it one level up and checkout the repo
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/download-artifact@v3
-  #     - run: |
-  #         mv ../artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip ../
-  #         echo "- getting ZIP-Archive and release notes :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+  zenodo:
+    needs: [create_package, version]
+    name: "publish on zenodo"
+    outputs:
+      doi: ${{ steps.zenodraft.outputs.doi }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Archiving package on zenodo to get a DOI:" >> $GITHUB_STEP_SUMMARY
+      # 1. download artifact in folder artifact/ and move it one level up and checkout the repo
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+      - run: |
+          mv artifact/${{ env.REPO_NAME }}-v${{ needs.version.outputs.new }}.zip ../
+          echo "- getting ZIP-Archive and release notes :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  #     # 2. install zenodraft
-  #     - name: "install zenodraft"
-  #       env:
-  #         URL: "https://zenodo.org/"
-  #       run: |
-  #         STATUS=0
-  #         npm install -g zenodraft
-  #         echo "- installing zenodraft :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-  #         if ! curl --output /dev/null --silent --head --fail "$URL"; then
-  #           STATUS=1
-  #         fi
-  #         if [ $STATUS = 1 ]; then
-  #           echo "- :no_entry_sign: $URL is not reachable" >> $GITHUB_STEP_SUMMARY
-  #           echo ":warning: Please re-run action later!" >> $GITHUB_STEP_SUMMARY
-  #           echo ":warning: Please remove github release manually!" >> $GITHUB_STEP_SUMMARY
-  #           exit 1
-  #         else
-  #           echo "- $URL is reachable :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-  #         fi
+      # 2. install zenodraft
+      - name: "install zenodraft"
+        env:
+          URL: "https://zenodo.org/"
+        run: |
+          STATUS=0
+          npm install -g zenodraft
+          echo "- installing zenodraft :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+          if ! curl --output /dev/null --silent --head --fail "$URL"; then
+            STATUS=1
+          fi
+          if [ $STATUS = 1 ]; then
+            echo "- :no_entry_sign: $URL is not reachable" >> $GITHUB_STEP_SUMMARY
+            echo ":warning: Please re-run action later!" >> $GITHUB_STEP_SUMMARY
+            echo ":warning: Please remove github release manually!" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "- $URL is reachable :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+          fi
 
-  #     # 3. Update zenodo metadata.json
-  #     - name: "Update zenodo metadata.json"
-  #       run: |
-  #         VERSION=${{ needs.version.outputs.new }}
-  #         sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION\"/g" .github/zenodo/metadata.json
-  #         echo "- updating zenodo metadata :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      # 3. Update zenodo metadata.json
+      - name: "Update zenodo metadata.json"
+        run: |
+          VERSION=${{ needs.version.outputs.new }}
+          sed -i".backup" -e"s/\"version\": \"%%\[SCRIPT\]\"/\"version\": \"$VERSION\"/g" .github/zenodo/metadata.json
+          echo "- updating zenodo metadata :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  #     # 4. upload new release to zenodo
-  #     - name: "uploading to zenodo"
-  #       id: zenodraft
-  #       env:
-  #         ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
-  #       run: |
-  #         DOI=$(zenodraft deposition create version ${{ env.ZENODO_COLLECTION }})
-  #         zenodraft file add $DOI ${{ env.REPO_NAME }}-v*.zip
-  #         zenodraft metadata update $DOI .github/zenodo/metadata.json
-  #         zenodraft deposition publish $DOI
-  #         ## =================================
-  #         ## provide variables for subsequent jobs
-  #         ## ---------------------------------
-  #         echo "doi=10.5281/zenodo.$DOI" >> $GITHUB_OUTPUT
-  #         echo "- publish release at zenodo with DOI: 10.5281/zenodo.$DOI :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      # 4. upload new release to zenodo
+      - name: "uploading to zenodo"
+        id: zenodraft
+        env:
+          ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
+        run: |
+          DOI=$(zenodraft deposition create version ${{ env.ZENODO_COLLECTION }})
+          zenodraft file add $DOI ${{ env.REPO_NAME }}-v*.zip
+          zenodraft metadata update $DOI .github/zenodo/metadata.json
+          zenodraft deposition publish $DOI
+          ## =================================
+          ## provide variables for subsequent jobs
+          ## ---------------------------------
+          echo "doi=10.5281/zenodo.$DOI" >> $GITHUB_OUTPUT
+          echo "- publish release at zenodo with DOI: 10.5281/zenodo.$DOI :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  # update_repository:
-  #   needs: [zenodo, version]
-  #   name: "updating CITATION.cff and CHANGELOG.md"
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: echo "Updating CITATION.cff and CHANGELOG.md:" >> $GITHUB_STEP_SUMMARY
-  #     # 1. checkout the repo
-  #     - name: "checkout"
-  #       uses: actions/checkout@v3
-  #       # with:
-  #       #   ref: main
+  update_repository:
+    needs: [zenodo, version]
+    name: "updating CITATION.cff and CHANGELOG.md"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Updating CITATION.cff and CHANGELOG.md:" >> $GITHUB_STEP_SUMMARY
+      # 1. checkout the repo
+      - name: "checkout"
+        uses: actions/checkout@v3
+        # with:
+        #   ref: main
 
-  #     # 2. update CITATION.cff
-  #     - name: "update CITATION.cff"
-  #       run: |
-  #         DATE=$(date "+%Y-%m-%d")
-  #         VERSION=${{ needs.version.outputs.new }}
-  #         DOI=${{ needs.publish_zenodo.outputs.doi }}
-  #         echo "find lines in CITATION.cff"
-  #         VERSION_LINE=$(grep -n '^version:' CITATION.cff | cut -d: -f1)
-  #         DATE_LINE=$(grep -n '^date-released:' CITATION.cff | cut -d: -f1)
-  #         echo "select the second DOI"
-  #         DOI_LINE=$(grep -n 'type: doi' CITATION.cff | cut -d: -f1 | awk "NR==2")
-  #         DOI_LINE=$(( $DOI_LINE + 1 ))
-  #         echo "update CITATION.cff"
-  #         sed -i -- "${VERSION_LINE}s|.*|version: $VERSION|" CITATION.cff
-  #         sed -i -- "${DATE_LINE}s|.*|date-released: ${DATE}|" CITATION.cff
-  #         sed -i -- "${DOI_LINE}s|.*|    value: $DOI|" CITATION.cff
-  #         echo "- updated CITATION.cff :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      # 2. update CITATION.cff
+      - name: "update CITATION.cff"
+        run: |
+          DATE=$(date "+%Y-%m-%d")
+          VERSION=${{ needs.version.outputs.new }}
+          DOI=${{ needs.publish_zenodo.outputs.doi }}
+          echo "find lines in CITATION.cff"
+          VERSION_LINE=$(grep -n '^version:' CITATION.cff | cut -d: -f1)
+          DATE_LINE=$(grep -n '^date-released:' CITATION.cff | cut -d: -f1)
+          echo "select the second DOI"
+          DOI_LINE=$(grep -n 'type: doi' CITATION.cff | cut -d: -f1 | awk "NR==2")
+          DOI_LINE=$(( $DOI_LINE + 1 ))
+          echo "update CITATION.cff"
+          sed -i -- "${VERSION_LINE}s|.*|version: $VERSION|" CITATION.cff
+          sed -i -- "${DATE_LINE}s|.*|date-released: ${DATE}|" CITATION.cff
+          sed -i -- "${DOI_LINE}s|.*|    value: $DOI|" CITATION.cff
+          echo "- updated CITATION.cff :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  #     # 3. update CHANGELOG.md
-  #     - name: "update CHANGELOG.md"
-  #       run: |
-  #         DATE=$(date "+%Y-%m-%d")
-  #         VERSION=${{ needs.version.outputs.new }}
-  #         URL="https://github.com/${{ env.ACCOUNT_NAME }}/${{ env.REPO_NAME }}"
-  #         CURRENT_VERSION=${{ needs.version.outputs.current }}
-  #         if [[ ${{ env.VERSION_SCHEMA }} = "semantic" ]]; then
-  #           sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION] $DATE" CHANGELOG.md
-  #         elif [[ ${{ env.VERSION_SCHEMA }} = "calendar" ]]; then
-  #           sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION]" CHANGELOG.md
-  #         fi
-  #         if [ "$CURRENT_VERSION" = "no_version" ]; then
-  #           sed -i -- "s|^\[Unreleased\]: .*$|\[Unreleased\]: $URL/compare/v$VERSION...main\n\[$VERSION\]: $URL/releases/tag/v$VERSION|" CHANGELOG.md
-  #         else
-  #           sed -i -- "s|^\[Unreleased\]: .*$|\[Unreleased\]: $URL/compare/v$VERSION...main\n\[$VERSION\]: $URL/compare/v$CURRENT_VERSION...v$VERSION|" CHANGELOG.md
-  #         fi
-  #         echo "- updated CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      # 3. update CHANGELOG.md
+      - name: "update CHANGELOG.md"
+        run: |
+          DATE=$(date "+%Y-%m-%d")
+          VERSION=${{ needs.version.outputs.new }}
+          URL="https://github.com/${{ env.ACCOUNT_NAME }}/${{ env.REPO_NAME }}"
+          CURRENT_VERSION=${{ needs.version.outputs.current }}
+          if [[ ${{ env.VERSION_SCHEMA }} = "semantic" ]]; then
+            sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION] $DATE" CHANGELOG.md
+          elif [[ ${{ env.VERSION_SCHEMA }} = "calendar" ]]; then
+            sed -i -- "/## \[Unreleased\]/a\\\n\n## Version [$VERSION]" CHANGELOG.md
+          fi
+          if [ "$CURRENT_VERSION" = "no_version" ]; then
+            sed -i -- "s|^\[Unreleased\]: .*$|\[Unreleased\]: $URL/compare/v$VERSION...main\n\[$VERSION\]: $URL/releases/tag/v$VERSION|" CHANGELOG.md
+          else
+            sed -i -- "s|^\[Unreleased\]: .*$|\[Unreleased\]: $URL/compare/v$VERSION...main\n\[$VERSION\]: $URL/compare/v$CURRENT_VERSION...v$VERSION|" CHANGELOG.md
+          fi
+          echo "- updated CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  #     # 4. push the change back to main
-  #     - name: push
-  #       uses: EndBug/add-and-commit@v9
-  #       with:
-  #         message: "updated to ${{ needs.version.outputs.new }} (via github action)"
-  #         add: CITATION.cff CHANGELOG.md
-  #         author_name: ${{ env.ACCOUNT_NAME }}
-  #         author_email: railedukit@ownx.net
-  #         tag: 'v${{ needs.version.outputs.new }} --force'
-  #     - run: echo "- updated repository with new CITATION.cff and CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+      # 4. push the change back to main
+      - name: push
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "updated to ${{ needs.version.outputs.new }} (via github action)"
+          add: CITATION.cff CHANGELOG.md
+          author_name: ${{ env.ACCOUNT_NAME }}
+          author_email: railedukit@ownx.net
+          tag: 'v${{ needs.version.outputs.new }} --force'
+      - run: echo "- updated repository with new CITATION.cff and CHANGELOG.md :white_check_mark:" >> $GITHUB_STEP_SUMMARY
 
-  # publish_mastodon:
-  #   needs: [zenodo, version]
-  #   name: "Toot about it on ${{ env.MASTODON_INSTANCE }}"
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: cbrgm/mastodon-github-action@v1
-  #       with:
-  #         message: "The new version ${{ needs.version.outputs.new }} of ${{ env.REPO_NAME }} is available! DOI: https://doi.org/${{ needs.zenodo.outputs.doi }}."
-  #         visibility: "public" # default: public
-  #       env:
-  #         MASTODON_URL: "https://${{ env.MASTODON_INSTANCE }}/"
-  #         MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }} # access token
+  publish_mastodon:
+    needs: [zenodo, version]
+    name: "Toot about it on $MASTODON_INSTANCE"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cbrgm/mastodon-github-action@v1
+        with:
+          message: "The new version ${{ needs.version.outputs.new }} of ${{ env.REPO_NAME }} is available! DOI: https://doi.org/${{ needs.zenodo.outputs.doi }}."
+          visibility: "public" # default: public
+        env:
+          MASTODON_URL: "https://${{ env.MASTODON_INSTANCE }}/"
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }} # access token
