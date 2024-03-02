@@ -8,6 +8,11 @@ Categories: Added, Changed, Deprecated, Removed, Fixed, and Security.
 
 ## [Unreleased]
 
+### Fixed
+
+* Corrected explanation of the learning matrix in the README.md.
+* Corrected small typos.
+
 
 ## Version [0.1.0] 2023-03-01
 
